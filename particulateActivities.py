@@ -1,35 +1,25 @@
 from tkinter import *
 import string
+import random
 
 
 def init(data):
     data.timer = 0
     data.numPt = len(data.ptList)
     data.boxX, data.boxY = data.width / 5, data.height / 5
-    for i in data.numPt:
-        string.ascii_letters[i] = data.ptList[i]
-    
-
-
-
-def mousePressed(event, data):
-    # use event.x and event.y
-    pass
-
-def keyPressed(event, data):
-    # use event.char and event.keysym
-    pass
-
-def timerFired(data):
-    data.timer += 1
-    if data.timer % 10 == 0:
-        pass
+    data.colors = ['red','blue','yellow','green','purple','orange','black','brown','cyan']
+    data.margin = data.width / 10
 
 def redrawAll(canvas, data):
-    canvas.create_rectangle(data.boxX, data.boxY, 4*data.boxX, 4*data.boxY, outline = 'black')
-    
-
-
+    canvas.create_rectangle(data.margin, data.margin, data.width-data.margin, data.height-data.margin, outline = 'black')
+    colorIndex = 0
+    for num in range(data.numPt):
+        for particle in range(num):
+            colorIndex += 1
+            drawParticle(colorIndex)
+            
+def drawParticle(colorIndex):
+    pass
 
 
 
