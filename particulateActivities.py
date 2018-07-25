@@ -3,31 +3,61 @@ import string
 import random
 
 
-def init(data):
-    data.timer = 0
-    data.numPt = len(data.ptList)
-    data.boxX, data.boxY = data.width / 5, data.height / 5
-    data.colors = ['red','blue','yellow','green','purple','orange','black','brown','cyan']
-    data.margin = data.width / 10
 
-def redrawAll(canvas, data):
-    canvas.create_rectangle(data.margin, data.margin, data.width-data.margin, data.height-data.margin, outline = 'black')
-    colorIndex = 0
+
+def init(data):
+    data.numPt = len(data.ptList)
+    data.colors = ['red','blue','yellow','green','purple','orange','black','brown','cyan']
+    data.colorIndex = 0
+    data.margin = data.width / 10
+    data.ptSize = data.width // 20
+    data.imageList = []
+    
+def getParticles(data):
+    ptDict = dict()
     for num in range(data.numPt):
-        for particle in range(num):
-            colorIndex += 1
-            drawParticle(colorIndex)
+        for particle in range(data.ptList[num]):
+            pass
+        data.colorIndex += 1
             
-def drawParticle(colorIndex):
+    
+    
+    
+    
+def mousePressed(event, data):
     pass
 
 
+def keyPressed(event, data):
+    if event.keysym == 'space':
+        print('hi')
 
 
 
-####################################
-# use the run function as-is
-####################################
+def redrawAll(canvas, data):    
+    canvas.create_rectangle(data.margin, data.margin, data.width-data.margin, data.height-data.margin)
+    colorIndex = 0
+    for num in range(data.numPt):
+        for particle in range(data.ptList[num]):
+            drawParticle(data,canvas)
+        data.colorIndex += 1
+            
+            
+
+
+
+def drawParticle(data,canvas):
+    x = random.randint(data.margin+data.ptSize, data.width-data.margin-data.ptSize)
+    y = random.randint(data.margin+data.ptSize, data.height-data.margin-data.ptSize)
+    canvas.create_oval(x-data.ptSize,y-data.ptSize,x+data.ptSize,y+data.ptSize, fill = data.colors[data.colorIndex])
+
+
+
+
+
+###################################
+# #use the run function as-is
+###################################
 
 def run(ptList, width=300, height=300):
     def redrawAllWrapper(canvas, data):
@@ -45,18 +75,13 @@ def run(ptList, width=300, height=300):
         keyPressed(event, data)
         redrawAllWrapper(canvas, data)
 
-    def timerFiredWrapper(canvas, data):
-        timerFired(data)
-        redrawAllWrapper(canvas, data)
-        # pause, then call timerFired again
-        canvas.after(data.timerDelay, timerFiredWrapper, canvas, data)
     # Set up data and call init
     class Struct(object): pass
     data = Struct()
     data.ptList = ptList
     data.width = width
     data.height = height
-    data.timerDelay = 100 # milliseconds
+    print(data.width, data.height)
     root = Tk()
     init(data)
     # create the root and the canvas
@@ -67,11 +92,10 @@ def run(ptList, width=300, height=300):
                             mousePressedWrapper(event, canvas, data))
     root.bind("<Key>", lambda event:
                             keyPressedWrapper(event, canvas, data))
-    timerFiredWrapper(canvas, data)
+    redrawAll(canvas, data)
     # and launch the app
     root.mainloop()  # blocks until window is closed
     print("bye!")
-
 
 ptList = [2,3]
 run(ptList, 400, 400)
